@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Route, Link, Routes, useMatch } from 'react-router-dom';
+import { Route, Link, Routes, useMatch, useNavigate } from 'react-router-dom';
 
 const Menu = () => {
     const padding = {
@@ -73,7 +73,7 @@ const About = () => (
 );
 
 const Footer = () => (
-    <div>
+    <div style={{ position: 'fixed', bottom: 0, paddingBlock: '1rem' }}>
         Anecdote app for{' '}
         <a href='https://fullstackopen.com/'>Full Stack Open</a>. See{' '}
         <a href='https://github.com/degenone/FSO-part7/blob/main/routed-anecdotes/src/App.jsx'>
@@ -84,20 +84,21 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
+    const { addNew } = props;
+    const navigate = useNavigate();
     const [content, setContent] = useState('');
     const [author, setAuthor] = useState('');
     const [info, setInfo] = useState('');
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.addNew({
+        addNew({
             content,
             author,
             info,
             votes: 0,
         });
+        navigate('/');
     };
-
     return (
         <div>
             <h2>create a new anecdote</h2>
@@ -132,6 +133,20 @@ const CreateNew = (props) => {
     );
 };
 
+const Notification = (props) => {
+    const { message } = props;
+    const style = {
+        border: '1px solid hsla(0, 0%, 0%, 0.5)',
+        padding: '0.5rem 1rem',
+        marginBlock: '0.5rem',
+    };
+    return (
+        <div style={style}>
+            <strong>{message}</strong>
+        </div>
+    );
+};
+
 const App = () => {
     const [anecdotes, setAnecdotes] = useState([
         {
@@ -150,9 +165,16 @@ const App = () => {
         },
     ]);
     const [notification, setNotification] = useState('');
+    const showNotification = (message) => {
+        setNotification(message);
+        setTimeout(() => {
+            setNotification('');
+        }, 3500);
+    };
     const addNew = (anecdote) => {
         anecdote.id = Math.round(Math.random() * 10000);
         setAnecdotes(anecdotes.concat(anecdote));
+        showNotification(`Created anecdote '${anecdote.content}'`);
     };
     const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
     const vote = (id) => {
@@ -173,6 +195,7 @@ const App = () => {
         <div>
             <h1>Software anecdotes</h1>
             <Menu />
+            {notification && <Notification message={notification} />}
             <Routes>
                 <Route
                     path='/'
