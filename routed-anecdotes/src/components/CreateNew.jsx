@@ -4,9 +4,9 @@ import { useField } from '../hooks';
 export const CreateNew = (props) => {
     const { addNew } = props;
     const navigate = useNavigate();
-    const content = useField('text');
-    const author = useField('text');
-    const info = useField('text');
+    const { reset: contentReset, ...content } = useField('text');
+    const { reset: authorReset, ...author } = useField('text');
+    const { reset: infoReset, ...info } = useField('text');
     const handleSubmit = (e) => {
         e.preventDefault();
         addNew({
@@ -18,9 +18,9 @@ export const CreateNew = (props) => {
         navigate('/');
     };
     const handleReset = () => {
-        content.reset();
-        author.reset();
-        info.reset();
+        contentReset();
+        authorReset();
+        infoReset();
     };
     return (
         <div>
