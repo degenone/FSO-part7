@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import useField from '../hooks';
+import { useField } from '../hooks';
 
 export const CreateNew = (props) => {
     const { addNew } = props;
@@ -16,6 +16,11 @@ export const CreateNew = (props) => {
             votes: 0,
         });
         navigate('/');
+    };
+    const handleReset = () => {
+        content.reset();
+        author.reset();
+        info.reset();
     };
     return (
         <div>
@@ -39,7 +44,12 @@ export const CreateNew = (props) => {
                         <label htmlFor='info'>url for more info</label>
                         <input name='info' id='info' {...info} required />
                     </div>
-                    <button type='submit'>create</button>
+                    <div>
+                        <button type='submit'>create</button>
+                        <button type='button' onClick={handleReset}>
+                            reset
+                        </button>
+                    </div>
                 </fieldset>
             </form>
         </div>
