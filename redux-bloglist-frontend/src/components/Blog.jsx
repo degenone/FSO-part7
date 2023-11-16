@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const Blog = (props) => {
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user);
+    const user = useSelector((state) => state.user);
     const { blog } = props;
     const [visible, setVisible] = useState(false);
     const blogStyle = {

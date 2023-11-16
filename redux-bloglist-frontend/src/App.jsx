@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import blogService from './services/blogs';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
@@ -8,10 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogs } from './reducers/blogsReducer';
 import BlogList from './components/BlogList';
 import { removeUser } from './reducers/userReducer';
-import setUser from './reducers/userReducer';
+import { setUser } from './reducers/userReducer';
 
 const App = () => {
-    const user = useSelector(state => state.user);
+    const user = useSelector((state) => state.user);
     const blogFormRef = useRef(null);
     const dispatch = useDispatch();
 
@@ -24,14 +23,12 @@ const App = () => {
         if (userJSON) {
             const savedUser = JSON.parse(userJSON);
             dispatch(setUser(savedUser));
-            blogService.setToken(savedUser.token);
         }
     }, [dispatch]);
 
     const handleLogout = () => {
         dispatch(removeUser());
         window.localStorage.removeItem('loggedInBloglistUser');
-        blogService.setToken(null);
     };
 
     const toggleVisibility = () => blogFormRef.current.toggleVisibility();
@@ -45,7 +42,9 @@ const App = () => {
                 <div>
                     <div className='titlePanel'>
                         <h2>My Blogs List</h2>
-                        <p>User: {user.name}</p>
+                        <p>
+                            <i className='fa-solid fa-user'></i> {user.name}
+                        </p>
                         <button
                             id='btn-logout'
                             type='button'

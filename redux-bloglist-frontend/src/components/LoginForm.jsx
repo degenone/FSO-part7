@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../reducers/userReducer';
 import { showNotification } from '../reducers/notificationReducer';
-import blogService from '../services/blogs';
 import loginService from '../services/login';
 
 const LoginForm = () => {
@@ -21,7 +20,6 @@ const LoginForm = () => {
                 'loggedInBloglistUser',
                 JSON.stringify(user)
             );
-            blogService.setToken(user.token);
             setUsername('');
             setPassword('');
         } else {
