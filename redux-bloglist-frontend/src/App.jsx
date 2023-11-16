@@ -6,27 +6,19 @@ import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 import Notification from './components/Notification';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { showNotification } from './reducers/notificationReducer';
+import { fetchBlogs, createBlog } from './reducers/blogsReducer';
 
 const App = () => {
-    const [blogs, setBlogs] = useState([]);
+    const blogs = useSelector((state) => state.blogs);
     const [user, setUser] = useState(null);
     const blogFormRef = useRef(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchBlogs = async () => {
-            const resp = await blogService.getAll();
-            resp.sort((a, b) => {
-                if (a.likes > b.likes) return -1;
-                else if (a.likes < b.likes) return 1;
-                return 0;
-            });
-            setBlogs(resp);
-        };
-        fetchBlogs();
-    }, []);
+        dispatch(fetchBlogs());
+    }, [dispatch]);
 
     useEffect(() => {
         const userJSON = window.localStorage.getItem('loggedInBloglistUser');
@@ -37,14 +29,12 @@ const App = () => {
         }
     }, []);
 
-    const addBlog = async (blogOjb) => {
+    const addBlog = async (blogObj) => {
         try {
-            const blog = await blogService.create(blogOjb);
-            blog.user = { name: user.name, username: user.username };
-            setBlogs((blogs) => [...blogs, blog]);
+            dispatch(createBlog(blogObj));
             dispatch(
                 showNotification(
-                    `Added a new blog item: ${blog.title} by ${blog.author}`
+                    `Added a new blog item: ${blogObj.title} by ${blogObj.author}`
                 )
             );
             blogFormRef.current.toggleVisibility();
