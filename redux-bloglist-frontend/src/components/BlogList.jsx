@@ -1,9 +1,7 @@
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import Blog from './Blog';
 
-const BlogList = (props) => {
-    const { username } = props;
+const BlogList = () => {
     const blogs = useSelector((state) => state.blogs);
     return (
         <div>
@@ -14,13 +12,10 @@ const BlogList = (props) => {
                     return 0;
                 })
                 .map((blog) => (
-                    <Blog key={blog.id} blog={blog} username={username} />
+                    <Blog key={blog.id} blog={blog} />
                 ))}
         </div>
     );
-};
-BlogList.propTypes = {
-    username: PropTypes.string.isRequired,
 };
 
 export default BlogList;

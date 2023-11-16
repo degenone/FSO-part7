@@ -1,17 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import blogService from './services/blogs';
-import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 import Notification from './components/Notification';
-import { useDispatch } from 'react-redux';
-import { showNotification } from './reducers/notificationReducer';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogs } from './reducers/blogsReducer';
 import BlogList from './components/BlogList';
+import { removeUser } from './reducers/userReducer';
+import setUser from './reducers/userReducer';
 
 const App = () => {
-    const [user, setUser] = useState(null);
+    const user = useSelector(state => state.user);
     const blogFormRef = useRef(null);
     const dispatch = useDispatch();
 
@@ -22,36 +22,16 @@ const App = () => {
     useEffect(() => {
         const userJSON = window.localStorage.getItem('loggedInBloglistUser');
         if (userJSON) {
-            const user = JSON.parse(userJSON);
-            setUser(user);
-            blogService.setToken(user.token);
+            const savedUser = JSON.parse(userJSON);
+            dispatch(setUser(savedUser));
+            blogService.setToken(savedUser.token);
         }
-    }, []);
-
-    const handleLogin = async (userObj) => {
-        try {
-            const user = await loginService.login(userObj);
-            window.localStorage.setItem(
-                'loggedInBloglistUser',
-                JSON.stringify(user)
-            );
-            setUser(user);
-            blogService.setToken(user.token);
-            return true;
-        } catch (error) {
-            dispatch(
-                showNotification(
-                    'Something went wrong... Check your credentials.',
-                    true
-                )
-            );
-            return false;
-        }
-    };
+    }, [dispatch]);
 
     const handleLogout = () => {
-        setUser(null);
+        dispatch(removeUser());
         window.localStorage.removeItem('loggedInBloglistUser');
+        blogService.setToken(null);
     };
 
     const toggleVisibility = () => blogFormRef.current.toggleVisibility();
@@ -60,7 +40,7 @@ const App = () => {
         <div>
             <Notification />
             {user === null ? (
-                <LoginForm handleLogin={handleLogin} />
+                <LoginForm />
             ) : (
                 <div>
                     <div className='titlePanel'>
@@ -76,7 +56,7 @@ const App = () => {
                     <Togglable buttonLabel='Create New Item' ref={blogFormRef}>
                         <BlogForm toggleVisibility={toggleVisibility} />
                     </Togglable>
-                    <BlogList username={user.username} />
+                    <BlogList />
                 </div>
             )}
         </div>

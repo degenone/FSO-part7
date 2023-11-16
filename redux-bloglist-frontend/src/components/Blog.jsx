@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { showNotification } from '../reducers/notificationReducer';
 import { likeBlog, deleteBlog } from '../reducers/blogsReducer';
@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 
 const Blog = (props) => {
     const dispatch = useDispatch();
-    const { blog, username } = props;
+    const user = useSelector(state => state.user);
+    const { blog } = props;
     const [visible, setVisible] = useState(false);
     const blogStyle = {
         paddingTop: '0.4rem',
@@ -66,7 +67,7 @@ const Blog = (props) => {
                     </button>
                 </p>
                 <p>{blog.user.name}</p>
-                {blog.user.username === username && (
+                {blog.user.username === user.username && (
                     <button
                         className='btn-delete'
                         type='button'
@@ -80,7 +81,6 @@ const Blog = (props) => {
 };
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    username: PropTypes.string.isRequired,
 };
 
 export default Blog;
