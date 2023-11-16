@@ -1,17 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
-import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 import Notification from './components/Notification';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { showNotification } from './reducers/notificationReducer';
-import { fetchBlogs, createBlog } from './reducers/blogsReducer';
+import { fetchBlogs } from './reducers/blogsReducer';
+import BlogList from './components/BlogList';
 
 const App = () => {
-    const blogs = useSelector((state) => state.blogs);
     const [user, setUser] = useState(null);
     const blogFormRef = useRef(null);
     const dispatch = useDispatch();
@@ -28,54 +27,6 @@ const App = () => {
             blogService.setToken(user.token);
         }
     }, []);
-
-    const addBlog = async (blogObj) => {
-        try {
-            dispatch(createBlog(blogObj));
-            dispatch(
-                showNotification(
-                    `Added a new blog item: ${blogObj.title} by ${blogObj.author}`
-                )
-            );
-            blogFormRef.current.toggleVisibility();
-            return true;
-        } catch (error) {
-            dispatch(showNotification('error creating a blog list item', true));
-        }
-        return false;
-    };
-
-    const likeBlog = async (id, blogOjb) => {
-        try {
-            const blog = await blogService.update(id, blogOjb);
-            setBlogs(
-                blogs.map((b) =>
-                    b.id === blog.id ? { ...b, likes: blog.likes } : b
-                )
-            );
-            dispatch(showNotification(`Liked blog '${blog.title}'`));
-        } catch (error) {
-            dispatch(showNotification('error liking blog item', true));
-        }
-    };
-
-    const deleteBlog = async (id) => {
-        const blog = blogs.find((b) => b.id === id);
-        if (
-            window.confirm(
-                `Are you sure you want to remove "${blog.title}" by ${blog.author}`
-            )
-        ) {
-            try {
-                await blogService.deleteBlog(id);
-                setBlogs(blogs.filter((b) => b.id !== id));
-            } catch (error) {
-                dispatch(
-                    showNotification('error deleting blog list item', true)
-                );
-            }
-        }
-    };
 
     const handleLogin = async (userObj) => {
         try {
@@ -103,6 +54,8 @@ const App = () => {
         window.localStorage.removeItem('loggedInBloglistUser');
     };
 
+    const toggleVisibility = () => blogFormRef.current.toggleVisibility();
+
     return (
         <div>
             <Notification />
@@ -121,17 +74,9 @@ const App = () => {
                         </button>
                     </div>
                     <Togglable buttonLabel='Create New Item' ref={blogFormRef}>
-                        <BlogForm addBlog={addBlog} />
+                        <BlogForm toggleVisibility={toggleVisibility} />
                     </Togglable>
-                    {blogs.map((blog) => (
-                        <Blog
-                            key={blog.id}
-                            blog={blog}
-                            likeBlog={likeBlog}
-                            deleteBlog={deleteBlog}
-                            username={user.username}
-                        />
-                    ))}
+                    <BlogList username={user.username} />
                 </div>
             )}
         </div>

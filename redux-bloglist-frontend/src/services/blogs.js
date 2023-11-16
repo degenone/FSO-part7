@@ -10,8 +10,8 @@ const getAll = async () => {
     return resp.data;
 };
 
-const create = async (blog) => {
-    const resp = await axios.post(URL, blog, {
+const create = async (blogObj) => {
+    const resp = await axios.post(URL, blogObj, {
         headers: { Authorization: token },
     });
     return resp.data;

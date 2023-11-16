@@ -1,8 +1,12 @@
+import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { showNotification } from '../reducers/notificationReducer';
+import { likeBlog, deleteBlog } from '../reducers/blogsReducer';
 import PropTypes from 'prop-types';
 
 const Blog = (props) => {
-    const { blog, likeBlog, deleteBlog, username } = props;
+    const dispatch = useDispatch();
+    const { blog, username } = props;
     const [visible, setVisible] = useState(false);
     const blogStyle = {
         paddingTop: '0.4rem',
@@ -12,13 +16,28 @@ const Blog = (props) => {
         borderWidth: '2px',
         marginBottom: 5,
     };
-    const handleLike = async () => {
-        await likeBlog(blog.id, {
-            likes: blog.likes + 1,
-        });
+    const handleLikeBlog = async () => {
+        try {
+            dispatch(likeBlog(blog.id, { likes: blog.likes + 1 }));
+            dispatch(showNotification(`Liked blog '${blog.title}'`));
+        } catch (error) {
+            dispatch(showNotification('error liking blog item', true));
+        }
     };
-    const handleDelete = async () => {
-        await deleteBlog(blog.id);
+    const handleDeleteBlog = async () => {
+        if (
+            window.confirm(
+                `Are you sure you want to remove "${blog.title}" by ${blog.author}`
+            )
+        ) {
+            try {
+                dispatch(deleteBlog(blog.id));
+            } catch (error) {
+                dispatch(
+                    showNotification('error deleting blog list item', true)
+                );
+            }
+        }
     };
     return (
         <div style={blogStyle}>
@@ -42,7 +61,7 @@ const Blog = (props) => {
                     <button
                         className='btn-like'
                         type='button'
-                        onClick={handleLike}>
+                        onClick={handleLikeBlog}>
                         Like
                     </button>
                 </p>
@@ -51,7 +70,7 @@ const Blog = (props) => {
                     <button
                         className='btn-delete'
                         type='button'
-                        onClick={handleDelete}>
+                        onClick={handleDeleteBlog}>
                         Delete This
                     </button>
                 )}
@@ -61,8 +80,6 @@ const Blog = (props) => {
 };
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    likeBlog: PropTypes.func.isRequired,
-    deleteBlog: PropTypes.func.isRequired,
     username: PropTypes.string.isRequired,
 };
 
