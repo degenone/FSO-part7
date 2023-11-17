@@ -9,6 +9,7 @@ import { Routes, Route } from 'react-router-dom';
 import Users from './components/Users';
 import User from './components/User';
 import Blogs from './components/Blogs';
+import Blog from './components/Blog';
 
 const App = () => {
     const user = useSelector((state) => state.users.active);
@@ -51,6 +52,7 @@ const App = () => {
                     </div>
                     <Routes>
                         <Route path='/' element={<Blogs />} />
+                        <Route path='/blogs/:id' element={<Blog />} />
                         <Route path='/users' element={<Users />} />
                         <Route path='/users/:id' element={<User />} />
                     </Routes>
