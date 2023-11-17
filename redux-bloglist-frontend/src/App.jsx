@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogs } from './reducers/blogsReducer';
 import { removeActive, initializeUsers } from './reducers/userReducer';
 import { setActive } from './reducers/userReducer';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import Users from './components/Users';
 import User from './components/User';
 import Blogs from './components/Blogs';
@@ -38,24 +38,30 @@ const App = () => {
                 <LoginForm />
             ) : (
                 <div>
-                    <div className='titlePanel'>
-                        <h2>My Blogs List</h2>
-                        <p>
-                            <i className='fa-solid fa-user'></i> {user.name}
-                        </p>
-                        <button
-                            id='btn-logout'
-                            type='button'
-                            onClick={handleLogout}>
-                            Log Out
-                        </button>
+                    <nav>
+                        <Link to='/'>Blogs</Link>
+                        <Link to='/users'>Users</Link>
+                        <div className='active-user'>
+                            <p>
+                                <i className='fa-solid fa-user'></i> {user.name}
+                            </p>
+                            <button
+                                id='btn-logout'
+                                type='button'
+                                onClick={handleLogout}
+                                title='Log Out'>
+                                <i className='fa-solid fa-right-from-bracket'></i>
+                            </button>
+                        </div>
+                    </nav>
+                    <div style={{ marginInline: '1rem' }}>
+                        <Routes>
+                            <Route path='/' element={<Blogs />} />
+                            <Route path='/blogs/:id' element={<Blog />} />
+                            <Route path='/users' element={<Users />} />
+                            <Route path='/users/:id' element={<User />} />
+                        </Routes>
                     </div>
-                    <Routes>
-                        <Route path='/' element={<Blogs />} />
-                        <Route path='/blogs/:id' element={<Blog />} />
-                        <Route path='/users' element={<Users />} />
-                        <Route path='/users/:id' element={<User />} />
-                    </Routes>
                 </div>
             )}
         </div>

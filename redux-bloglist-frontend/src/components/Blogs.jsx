@@ -8,6 +8,7 @@ const Blogs = () => {
     const toggleVisibility = () => blogFormRef.current.toggleVisibility();
     return (
         <div>
+            <h2>Blogs App</h2>
             <Togglable buttonLabel='Create New Item' ref={blogFormRef}>
                 <BlogForm toggleVisibility={toggleVisibility} />
             </Togglable>
