@@ -3,33 +3,33 @@ import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogs } from './reducers/blogsReducer';
-import { removeUser } from './reducers/userReducer';
-import { setUser } from './reducers/userReducer';
+import { removeActive, initializeUsers } from './reducers/userReducer';
+import { setActive } from './reducers/userReducer';
 import { Routes, Route } from 'react-router-dom';
 import Users from './components/Users';
+import User from './components/User';
 import Blogs from './components/Blogs';
 
 const App = () => {
-    const user = useSelector((state) => state.user);
+    const user = useSelector((state) => state.users.active);
     const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(fetchBlogs());
     }, [dispatch]);
-
+    useEffect(() => {
+        dispatch(initializeUsers());
+    }, [dispatch]);
     useEffect(() => {
         const userJSON = window.localStorage.getItem('loggedInBloglistUser');
         if (userJSON) {
             const savedUser = JSON.parse(userJSON);
-            dispatch(setUser(savedUser));
+            dispatch(setActive(savedUser));
         }
     }, [dispatch]);
-
     const handleLogout = () => {
-        dispatch(removeUser());
+        dispatch(removeActive());
         window.localStorage.removeItem('loggedInBloglistUser');
     };
-
     return (
         <div>
             <Notification />
@@ -52,6 +52,7 @@ const App = () => {
                     <Routes>
                         <Route path='/' element={<Blogs />} />
                         <Route path='/users' element={<Users />} />
+                        <Route path='/users/:id' element={<User />} />
                     </Routes>
                 </div>
             )}

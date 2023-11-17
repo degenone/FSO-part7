@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../reducers/userReducer';
+import { setActive } from '../reducers/userReducer';
 import { showNotification } from '../reducers/notificationReducer';
 import loginService from '../services/login';
 
@@ -15,7 +15,7 @@ const LoginForm = () => {
             password,
         });
         if (user) {
-            dispatch(setUser(user));
+            dispatch(setActive(user));
             window.localStorage.setItem(
                 'loggedInBloglistUser',
                 JSON.stringify(user)
