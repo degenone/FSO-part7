@@ -17,18 +17,14 @@ const BlogForm = (props) => {
             author,
             url,
         };
-        try {
-            dispatch(createBlog(blog));
-            dispatch(
-                showNotification(`Added a new blog item: ${title} by ${author}`)
-            );
-            toggleVisibility();
-            setTitle('');
-            setAuthor('');
-            setUrl('');
-        } catch (error) {
-            dispatch(showNotification('error creating a blog list item', true));
-        }
+        dispatch(createBlog(blog));
+        dispatch(
+            showNotification(`Added a new blog item: ${title} by ${author}`)
+        );
+        toggleVisibility();
+        setTitle('');
+        setAuthor('');
+        setUrl('');
     };
     return (
         <div>

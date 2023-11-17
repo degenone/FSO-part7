@@ -11,23 +11,36 @@ const getAll = async () => {
 };
 
 const create = async (blogObj) => {
-    const resp = await axios.post(URL, blogObj, {
-        headers: { Authorization: token },
-    });
-    return resp.data;
+    try {
+        const resp = await axios.post(URL, blogObj, {
+            headers: { Authorization: token },
+        });
+        return resp.data;
+    } catch (error) {
+        return { error: error };
+    }
 };
 
 const update = async (id, updateObj) => {
-    const resp = await axios.put(`${URL}/${id}`, updateObj, {
-        headers: { Authorization: token },
-    });
-    return resp.data;
+    try {
+        const resp = await axios.put(`${URL}/${id}`, updateObj, {
+            headers: { Authorization: token },
+        });
+        return resp.data;
+    } catch (error) {
+        return { error: error };
+    }
 };
 
 const deleteBlog = async (id) => {
-    await axios.delete(`${URL}/${id}`, {
-        headers: { Authorization: token },
-    });
+    try {
+        await axios.delete(`${URL}/${id}`, {
+            headers: { Authorization: token },
+        });
+        return null;
+    } catch (error) {
+        return { error: error };
+    }
 };
 
 export default { getAll, create, update, deleteBlog, setToken };

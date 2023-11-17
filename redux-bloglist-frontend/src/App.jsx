@@ -1,17 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import LoginForm from './components/LoginForm';
-import BlogForm from './components/BlogForm';
-import Togglable from './components/Togglable';
 import Notification from './components/Notification';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogs } from './reducers/blogsReducer';
-import BlogList from './components/BlogList';
 import { removeUser } from './reducers/userReducer';
 import { setUser } from './reducers/userReducer';
+import { Routes, Route } from 'react-router-dom';
+import Users from './components/Users';
+import Blogs from './components/Blogs';
 
 const App = () => {
     const user = useSelector((state) => state.user);
-    const blogFormRef = useRef(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -30,8 +29,6 @@ const App = () => {
         dispatch(removeUser());
         window.localStorage.removeItem('loggedInBloglistUser');
     };
-
-    const toggleVisibility = () => blogFormRef.current.toggleVisibility();
 
     return (
         <div>
@@ -52,10 +49,10 @@ const App = () => {
                             Log Out
                         </button>
                     </div>
-                    <Togglable buttonLabel='Create New Item' ref={blogFormRef}>
-                        <BlogForm toggleVisibility={toggleVisibility} />
-                    </Togglable>
-                    <BlogList />
+                    <Routes>
+                        <Route path='/' element={<Blogs />} />
+                        <Route path='/users' element={<Users />} />
+                    </Routes>
                 </div>
             )}
         </div>

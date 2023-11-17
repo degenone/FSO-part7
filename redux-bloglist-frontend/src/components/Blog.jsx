@@ -18,12 +18,8 @@ const Blog = (props) => {
         marginBottom: 5,
     };
     const handleLikeBlog = async () => {
-        try {
-            dispatch(likeBlog(blog.id, { likes: blog.likes + 1 }));
-            dispatch(showNotification(`Liked blog '${blog.title}'`));
-        } catch (error) {
-            dispatch(showNotification('error liking blog item', true));
-        }
+        dispatch(likeBlog(blog.id, { likes: blog.likes + 1 }));
+        dispatch(showNotification(`Liked blog '${blog.title}'`));
     };
     const handleDeleteBlog = async () => {
         if (
@@ -31,13 +27,7 @@ const Blog = (props) => {
                 `Are you sure you want to remove "${blog.title}" by ${blog.author}`
             )
         ) {
-            try {
-                dispatch(deleteBlog(blog.id));
-            } catch (error) {
-                dispatch(
-                    showNotification('error deleting blog list item', true)
-                );
-            }
+            dispatch(deleteBlog(blog.id));
         }
     };
     return (

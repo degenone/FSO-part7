@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import blogsService from '../services/blogs';
+import { showNotification } from './notificationReducer';
 
 const blogsSlice = createSlice({
     name: 'blogs',
@@ -34,17 +35,56 @@ export const fetchBlogs = () => async (dispatch) => {
 
 export const createBlog = (blogObj) => async (dispatch) => {
     const data = await blogsService.create(blogObj);
-    dispatch(appendBlog(data));
+    if (data.error) {
+        if (data.error.response.data.error === 'token expired') {
+            dispatch(
+                showNotification(
+                    'Your token has expired, please log in again.',
+                    true
+                )
+            );
+        } else {
+            dispatch(showNotification('error creating a blog list item', true));
+        }
+    } else {
+        dispatch(appendBlog(data));
+    }
 };
 
 export const likeBlog = (id, updateObj) => async (dispatch) => {
     const data = await blogsService.update(id, updateObj);
-    dispatch(updateBlog(data));
+    if (data.error) {
+        if (data.error.response.data.error === 'token expired') {
+            dispatch(
+                showNotification(
+                    'Your token has expired, please log in again.',
+                    true
+                )
+            );
+        } else {
+            dispatch(showNotification('error liking a blog list item', true));
+        }
+    } else {
+        dispatch(updateBlog(data));
+    }
 };
 
 export const deleteBlog = (id) => async (dispatch) => {
-    await blogsService.deleteBlog(id);
-    dispatch(removeBlog(id));
+    const data = await blogsService.deleteBlog(id);
+    if (data !== null && data.error) {
+        if (data.error.response.data.error === 'token expired') {
+            dispatch(
+                showNotification(
+                    'Your token has expired, please log in again.',
+                    true
+                )
+            );
+        } else {
+            dispatch(showNotification('error deleting a blog list item', true));
+        }
+    } else {
+        dispatch(removeBlog(id));
+    }
 };
 
 export default blogsSlice.reducer;
