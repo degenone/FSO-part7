@@ -1,32 +1,24 @@
-import { useState } from 'react';
 import blogsService from '../services/blogs';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { appendComment } from '../reducers/blogsReducer';
+import { useField } from '../hooks';
 
 const CommentForm = (props) => {
     const { id } = props;
-    const [comment, setComment] = useState('');
+    const { reset, ...comment } = useField('text', 'comment');
     const dispatch = useDispatch();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await blogsService.addComment(id, comment);
-        dispatch(appendComment({ id, comment }));
-        setComment('');
+        await blogsService.addComment(id, comment.value);
+        dispatch(appendComment({ id, comment: comment.value }));
+        reset();
     };
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <label htmlFor='comment'>Add a comment:</label>
-                <input
-                    type='text'
-                    name='comment'
-                    id='comment'
-                    required
-                    minLength={3}
-                    value={comment}
-                    onChange={({ target }) => setComment(target.value)}
-                />
+                <input required minLength={3} {...comment} />
                 <input type='submit' value='Add' />
             </form>
         </div>

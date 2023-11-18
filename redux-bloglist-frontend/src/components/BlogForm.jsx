@@ -1,30 +1,32 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { createBlog } from '../reducers/blogsReducer';
 import { showNotification } from '../reducers/notificationReducer';
+import { useField } from '../hooks';
 
 const BlogForm = (props) => {
     const { toggleVisibility } = props;
     const dispatch = useDispatch();
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [url, setUrl] = useState('');
+    const { reset: titleReset, ...title } = useField('text', 'title');
+    const { reset: authorReset, ...author } = useField('text', 'author');
+    const { reset: urlReset, ...url } = useField('text', 'url');
     const handleSubmit = async (e) => {
         e.preventDefault();
         const blog = {
-            title,
-            author,
-            url,
+            title: title.value,
+            author: author.value,
+            url: url.value,
         };
         dispatch(createBlog(blog));
         dispatch(
-            showNotification(`Added a new blog item: ${title} by ${author}`)
+            showNotification(
+                `Added a new blog item: ${title.value} by ${author.value}`
+            )
         );
         toggleVisibility();
-        setTitle('');
-        setAuthor('');
-        setUrl('');
+        titleReset();
+        authorReset();
+        urlReset();
     };
     return (
         <div>
@@ -34,37 +36,22 @@ const BlogForm = (props) => {
                     <div className='formGroup'>
                         <label htmlFor='title'>Title:</label>
                         <input
-                            type='text'
-                            name='title'
-                            id='title'
-                            value={title}
                             placeholder='Blog title...'
-                            onChange={({ target }) => setTitle(target.value)}
                             required
+                            {...title}
                         />
                     </div>
                     <div className='formGroup'>
                         <label htmlFor='author'>Author:</label>
                         <input
-                            type='text'
-                            name='author'
-                            id='author'
-                            value={author}
                             placeholder='Blog author...'
-                            onChange={({ target }) => setAuthor(target.value)}
+                            required
+                            {...author}
                         />
                     </div>
                     <div className='formGroup'>
                         <label htmlFor='url'>Url:</label>
-                        <input
-                            type='text'
-                            name='url'
-                            id='url'
-                            value={url}
-                            placeholder='Blog url...'
-                            onChange={({ target }) => setUrl(target.value)}
-                            required
-                        />
+                        <input placeholder='Blog url...' required {...url} />
                     </div>
                     <div>
                         <input id='btn-create' type='submit' value='Create' />
