@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
-import { useDispatch, useSelector } from 'react-redux';
 import { fetchBlogs } from './reducers/blogsReducer';
-import { removeActive, initializeUsers } from './reducers/userReducer';
+import { initializeUsers } from './reducers/userReducer';
 import { setActive } from './reducers/userReducer';
-import { Routes, Route, Link } from 'react-router-dom';
 import Users from './components/Users';
 import User from './components/User';
 import Blogs from './components/Blogs';
 import Blog from './components/Blog';
+import { Box, Container } from '@mui/material';
+import Nav from './components/Nav';
 
 const App = () => {
     const user = useSelector((state) => state.users.active);
@@ -27,44 +29,24 @@ const App = () => {
             dispatch(setActive(savedUser));
         }
     }, [dispatch]);
-    const handleLogout = () => {
-        dispatch(removeActive());
-        window.localStorage.removeItem('loggedInBloglistUser');
-    };
+
     return (
-        <div>
+        <Container maxWidth='md'>
             <Notification />
             {user === null ? (
                 <LoginForm />
             ) : (
-                <div>
-                    <nav>
-                        <Link to='/'>Blogs</Link>
-                        <Link to='/users'>Users</Link>
-                        <div className='active-user'>
-                            <p>
-                                <i className='fa-solid fa-user'></i> {user.name}
-                            </p>
-                            <button
-                                id='btn-logout'
-                                type='button'
-                                onClick={handleLogout}
-                                title='Log Out'>
-                                <i className='fa-solid fa-right-from-bracket'></i>
-                            </button>
-                        </div>
-                    </nav>
-                    <div style={{ marginInline: '1rem' }}>
-                        <Routes>
-                            <Route path='/' element={<Blogs />} />
-                            <Route path='/blogs/:id' element={<Blog />} />
-                            <Route path='/users' element={<Users />} />
-                            <Route path='/users/:id' element={<User />} />
-                        </Routes>
-                    </div>
-                </div>
+                <Box>
+                    <Nav />
+                    <Routes>
+                        <Route path='/' element={<Blogs />} />
+                        <Route path='/blogs/:id' element={<Blog />} />
+                        <Route path='/users' element={<Users />} />
+                        <Route path='/users/:id' element={<User />} />
+                    </Routes>
+                </Box>
             )}
-        </div>
+        </Container>
     );
 };
 

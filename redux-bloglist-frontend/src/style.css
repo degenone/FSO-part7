@@ -1,3 +1,8 @@
+body,
+html {
+    font-family: 'Roboto', sans-serif;
+}
+
 body {
     margin: 0;
 }
@@ -16,6 +21,8 @@ nav {
     display: flex;
     gap: 1rem;
     margin-inline-start: auto;
+    align-items: center;
+    padding: 0.5rem;
 }
 
 .active-user > button {
@@ -42,17 +49,10 @@ legend {
 }
 
 .notification {
-    background-color: hsl(159, 66%, 76%);
-    font-size: 1.125rem;
-    color: hsl(120, 100%, 25%);
-    padding-inline: 2.25rem;
-    padding-block: 1rem;
-    border: 5px solid;
-    border-radius: 0.25em;
-}
-
-.error {
-    color: firebrick;
+    position: absolute;
+    top: 2ch;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .hidden {

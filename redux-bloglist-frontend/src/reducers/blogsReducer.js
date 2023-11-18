@@ -39,7 +39,7 @@ export const fetchBlogs = () => async (dispatch) => {
     dispatch(setBlogs(data));
 };
 
-export const createBlog = (blogObj) => async (dispatch) => {
+export const createBlog = (blogObj, user) => async (dispatch) => {
     const data = await blogsService.create(blogObj);
     if (data.error) {
         if (data.error.response.data.error === 'token expired') {
@@ -53,7 +53,7 @@ export const createBlog = (blogObj) => async (dispatch) => {
             dispatch(showNotification('error creating a blog list item', true));
         }
     } else {
-        dispatch(appendBlog(data));
+        dispatch(appendBlog({ ...data, user }));
     }
 };
 

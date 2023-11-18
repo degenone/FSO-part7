@@ -3,6 +3,14 @@ import { setActive } from '../reducers/userReducer';
 import { showNotification } from '../reducers/notificationReducer';
 import loginService from '../services/login';
 import { useField } from '../hooks';
+import {
+    Icon,
+    TextField,
+    Button,
+    Paper,
+    Typography,
+    Tooltip,
+} from '@mui/material';
 
 const LoginForm = () => {
     const dispatch = useDispatch();
@@ -35,24 +43,46 @@ const LoginForm = () => {
         }
     };
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <fieldset>
-                    <legend>Log in to the Bloglist Application</legend>
+        <Paper
+            elevation={9}
+            style={{ marginBlockStart: '10rem', paddingBlock: '3.5rem' }}>
+            <form onSubmit={handleSubmit} style={{ marginInline: 'auto' }}>
+                <fieldset style={{ paddingInline: '2rem' }}>
+                    <legend>
+                        <Typography variant='h6'>
+                            Log in to the Bloglist Application
+                        </Typography>
+                    </legend>
                     <div className='formGroup'>
-                        <label htmlFor='username'>Enter username:</label>
-                        <input required minLength={3} {...username} />
+                        <TextField
+                            label='Enter username:'
+                            autoFocus={true}
+                            required
+                            inputProps={{ minLength: 3 }}
+                            {...username}
+                        />
                     </div>
                     <div className='formGroup'>
-                        <label htmlFor='password'>Enter password:</label>
-                        <input required minLength={8} {...password} />
+                        <TextField
+                            label='Enter password:'
+                            required
+                            inputProps={{ minLength: 8 }}
+                            {...password}
+                        />
                     </div>
                     <div>
-                        <input id='btn-login' type='submit' value='Login' />
+                        <Tooltip title='Login'>
+                            <Button
+                                id='btn-login'
+                                variant='contained'
+                                type='submit'>
+                                <Icon>login</Icon>
+                            </Button>
+                        </Tooltip>
                     </div>
                 </fieldset>
             </form>
-        </div>
+        </Paper>
     );
 };
 

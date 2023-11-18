@@ -1,23 +1,17 @@
+import { Paper, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const BlogItem = (props) => {
     const { blog } = props;
-    const blogStyle = {
-        paddingTop: '0.4rem',
-        paddingBottom: '0.4rem',
-        paddingLeft: '0.5rem',
-        border: 'dashed',
-        borderWidth: '2px',
-        marginBottom: 5,
-    };
     return (
-        <div style={blogStyle}>
-            <div className='blog-header'>
-                <a href={`blogs/${blog.id}`}>
+        <Paper sx={{ p: 1 }}>
+            <Link to={`blogs/${blog.id}`}>
+                <Typography variant='body1'>
                     <strong>{blog.title}</strong> by <i>{blog.author}</i>
-                </a>
-            </div>
-        </div>
+                </Typography>
+            </Link>
+        </Paper>
     );
 };
 BlogItem.propTypes = {

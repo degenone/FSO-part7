@@ -1,34 +1,46 @@
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import {
+    Box,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+} from '@mui/material';
 
 const Users = () => {
     const users = useSelector((state) => state.users.users);
     return (
-        <div>
-            <h2>Users</h2>
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Blogs created</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+        <Box>
+            <Typography variant='h2' sx={{ mb: 1 }}>
+                Users
+            </Typography>
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Blogs created</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
                         {users.map((user) => (
-                            <tr key={user.username}>
-                                <td>
+                            <TableRow key={user.username}>
+                                <TableCell>
                                     <Link to={`/users/${user.id}`}>
                                         {user.name}
                                     </Link>
-                                </td>
-                                <td>{user.blogs.length}</td>
-                            </tr>
+                                </TableCell>
+                                <TableCell>{user.blogs.length}</TableCell>
+                            </TableRow>
                         ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
     );
 };
 

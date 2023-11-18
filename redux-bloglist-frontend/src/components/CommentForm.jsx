@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { appendComment } from '../reducers/blogsReducer';
 import { useField } from '../hooks';
+import { Icon, IconButton, Paper, TextField, Tooltip } from '@mui/material';
 
 const CommentForm = (props) => {
     const { id } = props;
@@ -15,13 +16,23 @@ const CommentForm = (props) => {
         reset();
     };
     return (
-        <div>
+        <Paper elevation={2} sx={{ width: 'max-content', p: 2, my: 1 }}>
             <form onSubmit={handleSubmit}>
-                <label htmlFor='comment'>Add a comment:</label>
-                <input required minLength={3} {...comment} />
-                <input type='submit' value='Add' />
+                <TextField
+                    label='Add a comment:'
+                    required
+                    inputProps={{ minLength: 3 }}
+                    {...comment}
+                />
+                <Tooltip title='Add comment'>
+                    <IconButton
+                        sx={{ color: 'success.main', my: 1, ml: 1 }}
+                        type='submit'>
+                        <Icon>add</Icon>
+                    </IconButton>
+                </Tooltip>
             </form>
-        </div>
+        </Paper>
     );
 };
 CommentForm.propTypes = { id: PropTypes.string.isRequired };
