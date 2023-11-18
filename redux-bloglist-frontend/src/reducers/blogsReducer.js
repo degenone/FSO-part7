@@ -22,10 +22,16 @@ const blogsSlice = createSlice({
             const id = action.payload;
             return state.filter((b) => b.id !== id);
         },
+        appendComment: (state, action) => {
+            const { id, comment } = action.payload;
+            return state.map((b) =>
+                b.id === id ? { ...b, comments: [...b.comments, comment] } : b
+            );
+        },
     },
 });
 
-export const { setBlogs, appendBlog, updateBlog, removeBlog } =
+export const { setBlogs, appendBlog, updateBlog, removeBlog, appendComment } =
     blogsSlice.actions;
 
 export const fetchBlogs = () => async (dispatch) => {
