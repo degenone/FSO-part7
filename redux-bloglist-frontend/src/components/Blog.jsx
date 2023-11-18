@@ -49,6 +49,14 @@ const Blog = () => {
                     <i className='fa-solid fa-trash'></i>
                 </button>
             )}
+            <div>
+                <h3>Comments</h3>
+                <ul>
+                    {blog.comments.map((comment, i) => (
+                        <li key={`${comment}-${i}`}>{comment}</li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };
